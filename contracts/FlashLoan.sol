@@ -28,5 +28,38 @@ contract FlashLoan is FlashLoanSimpleReveiverBase {
         return true;
     }
 
+    function requestFlashLoan(address _token,uint256 _amount) public {
+        address receiverAddress = address(this);
+        address asset = _token;
+        uint256 amount = _amount;
+        bytes memory params = "";
+        uint16 referralCode = 0;
+
+        POOL.flashLoanSimple(
+        receiverAddress,
+        asset,
+        amount,
+        params,
+        referralCode
+        );
+    }
+
+    function getBalance(address _tokenAddress) external view returns (uint256) {
+        return IERC20(_tokenAddress).balanceOf(address(this));
+    }
+
+
+    function withdraw(address _tokenAddress) external onlyOwner {
+        IERC20 token = IERC20(_tokenAddress);
+        token.transfer(msg.sender, token.balanceOf(address(this)));
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the contract owner can call the function");
+        _;
+    }
+
+    //This is to add in some ether to contract if needed
+    receive() external payable {}
 
 }
