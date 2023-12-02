@@ -40,12 +40,14 @@ contract Dex {
         dai.transferFrom(msg.sender, address(this), _amount);
     }
 
+    //So we will buy dai in dex A for 90 USDC
     function buyDAI() external {
         uint256 daiToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) *
             (10**12);
         dai.transfer(msg.sender, daiToReceive);
     }
 
+    //Use this function to sell 1 DAI for 100 USDC in dex B
     function sellDAI() external {
         uint256 usdcToReceive = ((daiBalances[msg.sender] * dexBRate) / 100) /
             (10**12);
